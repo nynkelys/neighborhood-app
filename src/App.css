@@ -1,0 +1,60 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  transition: all 500ms ease;
+  height: 100px;
+}
+
+.App-logo:hover {
+  animation: bounce 1s;
+}
+
+.App-header {
+  background-color: #fff;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  color: #000;
+  font-size: 1.5em;
+}
+
+.content {
+  background-color: #eddfc0;
+  font-size: large;
+}
+
+#map {
+  height: 100vh;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+@keyframes bounce {
+  0%, 20%, 60%, 100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+
+  40% {
+    -webkit-transform: translateY(-20px);
+    transform: translateY(-20px);
+  }
+
+  80% {
+    -webkit-transform: translateY(-10px);
+    transform: translateY(-10px);
+  }
+}
