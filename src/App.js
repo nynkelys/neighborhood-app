@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
+import Search from './Search';
 
 // INSIDE COMPONENT, you can't say 'function functionName() { ... }', instead write like this:
 // functionName = () => { ... }
@@ -9,14 +10,14 @@ import axios from 'axios';
 class App extends Component {
 
   state = {
-    venues: []
+    locations: []
   }
 
   componentDidMount() { // When component did mount, get venues
-    this.getVenues()
+    this.getLocations()
   }
 
-  getVenues = () => { // Get venues is GET request from Foursquare
+  getLocations = () => { // Get venues is GET request from Foursquare
     const endPoint = "https://api.foursquare.com/v2/venues/explore?"
     const parameters = {
       client_id: "ORY3CXCT1M3CBRNVOZDJMAN250AMDHL5H24RWLMO4NYQOYVL",
@@ -30,11 +31,11 @@ class App extends Component {
     axios.get(endPoint + new URLSearchParams(parameters)) // Axios is comparable to fetch API
       .then(response => {
         this.setState({
-          venues: response.data.response.groups[0].items // Array of objects with venue data
+          locations: response.data.response.groups[0].items // Array of objects with venue data
         }, this.renderMap()) // Callback function: when response is reached and saved, render map
       })
       .catch(error => {
-        console.log("Error! " + error)
+        console.log("Error! " + error) // TO DO: INFORM USER ON PAGE
       })
     }
 
@@ -44,34 +45,41 @@ class App extends Component {
   }
 
   initMap = () => { // Add function to load map after page loads/before user interacts with map
+    const styles = []; // TO DO: Add styles
     const map = new window.google.maps.Map(document.getElementById('map'), { // Initialize
       center: {lat: 52.5058773, lng: 13.4674052}, // What location to center
-      zoom: 15
-   });
-
+      zoom: 15,
+      styles: styles
+    });
     const infowindow = new window.google.maps.InfoWindow(); // Create single infowindow
 
-    this.state.venues.map(myVenue => { // Loop over venues inside state
+    this.state.locations.map(location => { // Loop over venues inside state
       const contentString =
-        `${myVenue.venue.name}
+        `<span class="restaurant-title">${location.venue.name}</span>
         <br>
-        ${myVenue.venue.categories[0].name}
+        <span class="restaurant-type">${location.venue.categories[0].name}</span>
         <br>
         <br>
-        ${myVenue.venue.location.formattedAddress[0]},
-        ${myVenue.venue.location.formattedAddress[1]}
+        ${location.venue.location.formattedAddress[0]},
+        ${location.venue.location.formattedAddress[1]}
         <br>
-        (${myVenue.venue.location.distance} m away)`;
-      const marker = new window.google.maps.Marker({ // Create marker
-        position: {lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng}, // Where marker should appear
+        (${location.venue.location.distance} m away)`;
+      const marker = new window.google.maps.Marker({ // Create marker for every location in venues array in state
+        position: {lat: location.venue.location.lat, lng: location.venue.location.lng}, // Where marker should appear
         map: map, // The map it should appear on
-        title: myVenue.venue.name // Appears when hovering over (optional)
+        title: location.venue.name, // Appears when hovering over (optional)
+        animation: window.google.maps.Animation.DROP
       });
 
       // Click on a marker
-      marker.addListener('click', function() { // Link marker and infowindow
-        infowindow.setContent(contentString) // Change content
-        infowindow.open(map, marker);
+      marker.addListener('click', function() { // If you click a marker
+        infowindow.setContent(contentString) // Change content with content of marker clicked
+        infowindow.open(map, marker) // Open infowindow
+
+        marker.setAnimation(window.google.maps.Animation.BOUNCE)
+        setTimeout(function () {
+          marker.setAnimation(null);
+        }, 400)
       });
     })
   }
@@ -83,11 +91,15 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to my hood</h1>
         </header>
-        <p className="content">
+        <div className="content">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          <Search
+            // Props
+          />
           <div id="map"></div>
-        </p>
+        </div>
         <ul className="credits">
-          <li>Free vector art via <a target="_blank" href="https://www.Vecteezy.com/">Vecteezy.</a></li>
+          <li>Free vector art via <a href="https://www.Vecteezy.com/">Vecteezy.</a></li>
           <li>Walkthrough videos via <a href="https://www.youtube.com/playlist?list=PLgOB68PvvmWCGNn8UMTpcfQEiITzxEEA1">Yahya Elharony.</a></li>
         </ul>
       </main>
