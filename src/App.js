@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import axios from 'axios';
 import Search from './Search';
+import Atlas from './Atlas';
 
 // INSIDE COMPONENT, you can't say 'function functionName() { ... }', instead write like this:
 // functionName = () => { ... }
@@ -10,7 +11,8 @@ import Search from './Search';
 class App extends Component {
 
   state = {
-    locations: []
+    allLocations: [],
+    filteredLocations: []
   }
 
   componentDidMount() { // When component did mount, get venues
@@ -31,19 +33,29 @@ class App extends Component {
     axios.get(endPoint + new URLSearchParams(parameters)) // Axios is comparable to fetch API
       .then(response => {
         this.setState({
-          locations: response.data.response.groups[0].items // Array of objects with venue data
+          allLocations: response.data.response.groups[0].items, // Array of objects with venue data
+          filteredLocations: response.data.response.groups[0].items
         }, this.renderMap()) // Callback function: when response is reached and saved, render map
       })
       .catch(error => {
         console.log("Error! " + error) // TO DO: INFORM USER ON PAGE
       })
-    }
+  }
+
+  search = (query) => {
+    let locations = this.state.allLocations.filter((location) =>
+    {
+      return location.venue.name.includes(query) || location.venue.categories[0].name.includes(query)
+    });
+    this.setState({filteredLocations: locations})
+  }
 
   renderMap = () => { // Function will only be invoked when we have venues
     loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyAPWE9q9dv42yCFbSvSJBK8x8wgjrwAMrA&v=3&callback=initMap")
     window.initMap = this.initMap // Respectively refers to initMap function below and to initMap function in callback of script URL
   }
 
+  // TO DO: Only initialize markers that adhere to search function (if search is empty, show all markers)
   initMap = () => { // Add function to load map after page loads/before user interacts with map
     const styles = []; // TO DO: Add styles
     const map = new window.google.maps.Map(document.getElementById('map'), { // Initialize
@@ -53,7 +65,7 @@ class App extends Component {
     });
     const infowindow = new window.google.maps.InfoWindow(); // Create single infowindow
 
-    this.state.locations.map(location => { // Loop over venues inside state
+    this.state.allLocations.map(location => { // Loop over venues inside state
       const contentString =
         `<span class="restaurant-title">${location.venue.name}</span>
         <br>
@@ -71,16 +83,18 @@ class App extends Component {
         animation: window.google.maps.Animation.DROP
       });
 
-      // Click on a marker
-      marker.addListener('click', function() { // If you click a marker
-        infowindow.setContent(contentString) // Change content with content of marker clicked
-        infowindow.open(map, marker) // Open infowindow
+      return(
+        // Click on a marker
+        marker.addListener('click', function() { // If you click a marker
+          infowindow.setContent(contentString) // Change content with content of marker clicked
+          infowindow.open(map, marker) // Open infowindow
 
-        marker.setAnimation(window.google.maps.Animation.BOUNCE)
-        setTimeout(function () {
-          marker.setAnimation(null);
-        }, 400)
-      });
+          marker.setAnimation(window.google.maps.Animation.BOUNCE)
+          setTimeout(function () {
+            marker.setAnimation(null);
+          }, 400)
+        })
+      )
     })
   }
 
@@ -94,14 +108,26 @@ class App extends Component {
         <div className="content">
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
           <Search
+            search = {this.search}
+          />
+          <ul>
+            {this.state.filteredLocations.map((location) => (
+              <li key={location.venue.name}>
+                {location.venue.name}, {location.venue.categories[0].name}
+              </li>
+            ))}
+          </ul>
+          <Atlas
             // Props
           />
-          <div id="map"></div>
+          <div id="map">
+          </div>
         </div>
-        <ul className="credits">
-          <li>Free vector art via <a href="https://www.Vecteezy.com/">Vecteezy.</a></li>
-          <li>Walkthrough videos via <a href="https://www.youtube.com/playlist?list=PLgOB68PvvmWCGNn8UMTpcfQEiITzxEEA1">Yahya Elharony.</a></li>
-        </ul>
+        <div>
+          <ul className="credits">
+            <li>Free vector art via <a href="https://www.Vecteezy.com/">Vecteezy.</a></li>
+          </ul>
+        </div>
       </main>
     );
   }
