@@ -5,6 +5,7 @@ import './App.css';
 import axios from 'axios';
 import Search from './Search';
 import Atlas from './Atlas';
+import classnames from 'classnames';
 
 // INSIDE COMPONENT, you can't say 'function functionName() { ... }', instead write like this:
 // functionName = () => { ... }
@@ -39,7 +40,7 @@ class App extends Component {
         this.setState({
           allLocations: response.data.response.groups[0].items, // Array of objects with venue data
           filteredLocations: response.data.response.groups[0].items
-        }, this.renderMap()) // Callback function: when response is reached and saved, render map
+        }, this.renderMap) // Callback function: when response is reached and saved, render map
       })
       .catch(error => {
         console.log("Error! " + error) // TO DO: INFORM USER ON PAGE
@@ -47,14 +48,17 @@ class App extends Component {
   }
 
   search = (query) => {
-    let locationsList = this.state.allLocations.filter((location) =>
-      {
+    this.state.markers.map((marker) => { // TO DO: IMPROVE FILTER MARKERS (one step behind)
+      marker.setMap(null); // Delete previous markers
+    })
+
+    const locationsList = this.state.allLocations.filter((location) => { // Filter list
         const lowercase = location.venue.name.toLowerCase()
         return lowercase.includes(query) || location.venue.name.includes(query)
-      });
-    this.setState({filteredLocations: locationsList})
-    // TO DO: Delete previous markers
-    this.initMarkersAndInfowindow();
+    });
+
+    this.setState({filteredLocations: locationsList}, this.initMarkersAndInfowindow)
+
   }
 
   renderMap = () => { // Function will only be invoked when we have venues
@@ -67,7 +71,7 @@ class App extends Component {
     const shownMarkers =[];
     const map = this.state.map;
 
-    this.state.filteredLocations.map(location => { // Loop over venues inside state
+    const myClickFunctionsArray = this.state.filteredLocations.map(location => { // Loop over venues inside state
       const contentString =
         `<span class="restaurant-title">${location.venue.name}</span>
         <br>
@@ -84,12 +88,12 @@ class App extends Component {
         animation: window.google.maps.Animation.DROP,
         icon: icon
       });
+
       shownMarkers.push(marker);
+
       this.setState({markers: shownMarkers})
 
-      return(
-        // Click on a marker
-        marker.addListener('click', function() { // If you click a marker
+      const myClickFunction = () => { // If you click a marker
           infowindow.setContent(contentString) // Change content with content of marker clicked
           infowindow.open(map, marker) // Open infowindow
 
@@ -97,24 +101,48 @@ class App extends Component {
           setTimeout(function () {
             marker.setAnimation(null);
           }, 400)
-        })
-      )
+        }
+
+        marker.addListener('click', myClickFunction)
+
+      return myClickFunction
     })
+
+  this.setState({myClickFunctionsArray: myClickFunctionsArray})
   }
 
   initMap = () => { // Add function to load map after page loads/before user interacts with map
     const styles = [];
     const map = new window.google.maps.Map(document.getElementById('map'), { // Initialize
       center: {lat: 52.515816, lng: 13.454293}, // What location to center
-      zoom: 12,
+      zoom: 14,
       styles: styles
     });
     this.setState({map: map})
   this.initMarkersAndInfowindow();
   }
 
+  showInfo = (index) => {
+    const locations = this.state.allLocations;
+    const map = this.state.map;
+    const markers = this.state.markers;
+
+    this.state.myClickFunctionsArray[index]();
+
+    // locations.map((location) => {
+    //   if (event.target.innerText === location.venue.name) { // Change location.venue.name to same information stored in marker (marker.title)
+
+
+        // TO DO: BOUNCE MARKER AND OPEN INFOWINDOW WITH THAT LOCATION INFORMATION
+        // Open infowindow in right spot and with right content if location.venue.name (in contentString) === event.target.innerText
+
+    //   }
+    // })
+  }
+
   render() {
     const intro = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+
     return (
       <main className="App">
         <header className="App-header">
@@ -128,24 +156,24 @@ class App extends Component {
             search = {this.search}
           />
           <ul>
-            {this.state.filteredLocations.map((location) => (
+            {this.state.filteredLocations.map((location, index) => (
               <li
-              className="listItem"
-              key={location.venue.name}>
-                {location.venue.name}
+                key={location.venue.name}
+                className="listItem"
+                onClick={() => this.showInfo(index)}>
+                  {location.venue.name}
               </li>
             ))}
           </ul>
           <Atlas
             // Props
           />
-          <div id="map">
-          </div>
         </div>
         <div>
           <ul className="credits">
             <li><a href='https://www.freepik.com/free-vector/happy-people-with-ice-cream_2631347.htm'>Logo's designed by Freepik.</a></li>
             <li><a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY.</a></li>
+            <li><a href="https://foursquare.com/" title="Foursquare">Powered by Foursquare.</a></li>
           </ul>
         </div>
       </main>
