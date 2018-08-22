@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import './App.css';
 
 class Search extends Component {
 
@@ -19,9 +19,10 @@ class Search extends Component {
 				<form>
 	  				<label>
 	    				<input
+	    					className="inputfield"
 		    				type="text"
 		    				name="filter"
-		    				placeholder="Search"
+		    				placeholder="search venue"
 		    				value={this.state.query}
 		    				onChange={this.handleSearch}
 	    				/>

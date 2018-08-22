@@ -4,27 +4,27 @@
 
 .App-logo {
   transition: all 500ms ease;
-  height: 100px;
+  height: 150px;
+}
+
+.App-title {
+  padding: 0;
+  margin: 0;
+  font-family: 'Homemade Apple', cursive;
 }
 
 .App-logo:hover {
   animation: bounce 1s;
 }
 
-.App-header {
-  background-color: #fff;
-  height: 150px;
+.intro {
   padding: 20px;
-  color: white;
-}
-
-.App-title {
-  color: #000;
-  font-size: 1.5em;
+  font-family: 'News Cycle', sans-serif;
+  box-shadow:  0 -5px 15px -5px #adafa3;
 }
 
 .content {
-  background-color: #eddfc0;
+  background-color: #d6d8cd;
   font-size: large;
 }
 
@@ -36,10 +36,6 @@
   font-weight: bold;
 }
 
-.restaurant-type {
-  font-style: oblique;
-}
-
 html, body {
   height: 100%;
   margin: 0;
@@ -48,6 +44,24 @@ html, body {
 
 ul {
   list-style: none;
+  padding: 0;
+  margin: 0;
+  padding-top: 10px;
+}
+
+li {
+  font-family: 'News Cycle', sans-serif;
+}
+
+.inputfield {
+  font-family: 'Homemade Apple', sans-serif;
+  text-align: center;
+  width: 75%;
+}
+
+.listItem {
+  background-color: #ddd6d8;
+  padding: 10px;
 }
 
 @keyframes bounce {
