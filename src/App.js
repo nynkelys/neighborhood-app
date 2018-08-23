@@ -10,6 +10,9 @@ import classnames from 'classnames';
 // INSIDE COMPONENT, you can't say 'function functionName() { ... }', instead write like this:
 // functionName = () => { ... }
 
+const API = 'https://api.foursquare.com/v2/venues/explore?'
+const DEFAULT_QUERY = 'client_id=ORY3CXCT1M3CBRNVOZDJMAN250AMDHL5H24RWLMO4NYQOYVL&client_secret=WU5OUOY1WL2O4JFDWKHSKDPF3OC2VXCQTLBEPNEN511AFPWD&v=20180323&limit=20&ll=52.5058773,13.4674052&query=ice+cream+shop'
+
 class App extends Component {
 
   state = {
@@ -19,32 +22,16 @@ class App extends Component {
     map: {}
   }
 
-  componentDidMount() { // When component did mount, get venues
-    this.getLocations()
-  }
-
-  getLocations = () => { // Get venues is GET request from Foursquare
-    const endPoint = "https://api.foursquare.com/v2/venues/explore?"
-    const parameters = {
-      client_id: "ORY3CXCT1M3CBRNVOZDJMAN250AMDHL5H24RWLMO4NYQOYVL",
-      client_secret: "WU5OUOY1WL2O4JFDWKHSKDPF3OC2VXCQTLBEPNEN511AFPWD",
-      query: "Ice Cream Shop",
-      ll: "52.5058773, 13.4674052",
-      v: "20180323",
-      limit: 20
-    }
-
-    axios.get(endPoint + new URLSearchParams(parameters)) // Axios is comparable to fetch API
-      .then(response => {
-        console.log(response)
+  componentDidMount() {
+    fetch(API + DEFAULT_QUERY)
+      .then(response =>
+        response.json())
+      .then(response =>
         this.setState({
-          allLocations: response.data.response.groups[0].items, // Array of objects with venue data
-          filteredLocations: response.data.response.groups[0].items
-        }, this.renderMap) // Callback function: when response is reached and saved, render map
-      })
-      .catch(error => {
-        console.log("Error! " + error) // TO DO: INFORM USER ON PAGE
-      })
+          allLocations: response.response.groups[0].items, // Array of objects with venue data
+          filteredLocations: response.response.groups[0].items
+        }, this.renderMap)
+      )
   }
 
   search = (query) => {
