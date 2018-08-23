@@ -9,7 +9,7 @@ import Atlas from './Atlas';
 // functionName = () => { ... }
 
 const API = 'https://api.foursquare.com/v2/venues/explore?'
-const DEFAULT_QUERY = 'client_id=ORY3CXCT1M3CBRNVOZDJMAN250AMDHL5H24RWLMO4NYQOYVL&client_secret=WU5OUOY1WL2O4JFDWKHSKDPF3OC2VXCQTLBEPNEN511AFPWD&v=20180323&limit=20&ll=52.5058773,13.4674052&query=ice+cream+shop'
+const DEFAULT_QUERY = 'client_id=ORY3CXCT1M3CBRNVOZDJMAN250AMDHL5H24RWLMO4NYQOYVL&client_secret=WU5OUOY1WL2O4JFDWKHSKDPF3OC2VXCQTLBEPNEN511AFPWD&v=20180323&limit=10&ll=52.55413,13.37466&query=ice+cream+shop'
 
 class App extends Component {
 
@@ -18,6 +18,7 @@ class App extends Component {
     filteredLocations: [],
     markers: [],
     map: {},
+    locDetails: [],
     isLoading: false,
     error: null
   }
@@ -56,13 +57,30 @@ class App extends Component {
           allLocations: response.response.groups[0].items, // Array of objects with venue data
           filteredLocations: response.response.groups[0].items,
           isLoading: false
-        }, this.renderMap)
+        }, this.getDetails)
       )
       .catch(error =>
         this.setState({
           error, isLoading: false
         })
       );
+  }
+
+  getDetails = () => { // TO DO: EXPLAIN WHAT PLAN WAS HERE
+    // const locationIds = [];
+    // this.state.filteredLocations.map((location) => {
+    //   const id = location.venue.id
+    //   const URL_details = 'https://api.foursquare.com/v2/venues/'
+
+
+    // fetch(URL_details + id)
+    //   .then(response => {
+    //     if (response.ok) {
+    //       console.log(response)
+    //     }
+    //   })
+    // })
+    this.renderMap();
   }
 
   search = (query) => {
@@ -136,8 +154,8 @@ class App extends Component {
   initMap = () => { // Add function to load map after page loads/before user interacts with map
     const styles = [];
     const map = new window.google.maps.Map(document.getElementById('map'), { // Initialize
-      center: {lat: 52.515816, lng: 13.454293}, // What location to center
-      zoom: 14,
+      center: {lat: 52.55413, lng: 13.37466}, // What location to center
+      zoom: 12,
       styles: styles
     });
     this.setState({map: map})
@@ -149,7 +167,7 @@ class App extends Component {
   }
 
   render() {
-    const intro = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    const intro = 'On this page, you will find the ten ice cream shops that are closest to be\'kech Anti Café, the café in which the scholarship graduation event will take place on the 7th of September. You can go through the list of shops and click on one of the items to receive more information about that specific venue. Alternatively, you can click on a lollipop on the map itself. Let me know if you want to get some ice cream with me after the event!'
     const { isLoading, error } = this.state;
 
     if (error) {
@@ -164,7 +182,7 @@ class App extends Component {
       <main className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Ice cream in F'hain</h1>
+          <h1 id="App-title">Time for ice cream</h1>
 
         </header>
         <div className="content">
@@ -172,7 +190,8 @@ class App extends Component {
           <Search
             search = {this.search}
           />
-          <ul>
+          <div id="locations">
+          <ul id="ulList">
             {this.state.filteredLocations.map((location, index) => (
               <li
                 key={location.venue.name}
@@ -185,6 +204,7 @@ class App extends Component {
           <Atlas
             // Props
           />
+          </div>
         </div>
         <div>
           <ul id="credits">

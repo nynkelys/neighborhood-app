@@ -1,4 +1,5 @@
 .App {
+  width: 100%;
   text-align: center;
 }
 
@@ -22,10 +23,11 @@
   height: 150px;
 }
 
-.App-title {
+#App-title {
   padding: 0;
   margin: 0;
   font-family: 'Homemade Apple', cursive;
+  font-size: 28px;
 }
 
 .App-logo:hover {
@@ -34,17 +36,26 @@
 
 .intro {
   padding: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
   font-family: 'News Cycle', sans-serif;
   box-shadow:  0 -5px 15px -5px #adafa3;
 }
 
 .content {
   background-color: #d6d8cd;
-  font-size: large;
+  font-size: small;
+}
+
+#locations {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
 }
 
 #map {
   height: 100vh;
+  width: 100%;
 }
 
 .restaurant-title {
@@ -52,12 +63,14 @@
 }
 
 html, body {
+  width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
 ul {
+  width: 100%;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -68,10 +81,9 @@ ul {
 
 #listItem {
   line-height: 45px;
-
   background-color: #ddd6d8;
   padding: 10px;
-  box-shadow: inset 0 10px 40px 0 #b2b0b0;
+  box-shadow: inset 0 10px 60px 0 #b2b0b0;
   border: 0.1px solid #b2b2b2;
   color: #686868;
   font-weight: bold;
@@ -90,7 +102,7 @@ li {
 .inputfield {
   font-family: 'Homemade Apple', sans-serif;
   text-align: center;
-  width: 75%;
+  width: 90%;
 }
 
 #credits {
@@ -118,4 +130,42 @@ li {
     -webkit-transform: translateY(-10px);
     transform: translateY(-10px);
   }
+}
+
+@media screen and (min-width: 400px) {
+    .inputfield {
+      max-width: 75%;
+    }
+}
+
+@media screen and (min-width: 600px) {
+    .content {
+      font-size: medium;
+    }
+    .intro {
+      margin-bottom: 25px;
+    }
+    .inputfield {
+      max-width: 50%;
+    }
+    #map {
+      margin-top: 10px;
+      width: 75%;
+      height: 682px;
+    }
+    #ulList {
+      width: 25%;
+    }
+}
+
+@media screen and (min-width: 850px) {
+    .content {
+      font-size: large;
+    }
+    .inputfield {
+      position: absolute;
+      right: 20px;
+      top: 380px;
+      max-width: 30%;
+    }
 }
