@@ -2,10 +2,8 @@ import React, { Component } from 'react';
 import logo from './icon.jpg';
 import icon from './icon.svg';
 import './App.css';
-import axios from 'axios';
 import Search from './Search';
 import Atlas from './Atlas';
-import classnames from 'classnames';
 
 // INSIDE COMPONENT, you can't say 'function functionName() { ... }', instead write like this:
 // functionName = () => { ... }
@@ -19,19 +17,33 @@ class App extends Component {
     allLocations: [],
     filteredLocations: [],
     markers: [],
-    map: {}
+    map: {},
+    isLoading: false,
+    error: null
   }
 
   componentDidMount() {
+    this.setState({isLoading: true});
+
     fetch(API + DEFAULT_QUERY)
-      .then(response =>
-        response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Oh no! Something went wrong. Please try again later.');
+        }
+      })
       .then(response =>
         this.setState({
           allLocations: response.response.groups[0].items, // Array of objects with venue data
-          filteredLocations: response.response.groups[0].items
+          filteredLocations: response.response.groups[0].items,
+          isLoading: false
         }, this.renderMap)
       )
+      .catch(error =>
+        this.setState({
+          error, isLoading: false
+        }))
   }
 
   search = (query) => {
@@ -110,25 +122,20 @@ class App extends Component {
   }
 
   showInfo = (index) => {
-    const locations = this.state.allLocations;
-    const map = this.state.map;
-    const markers = this.state.markers;
-
     this.state.myClickFunctionsArray[index]();
-
-    // locations.map((location) => {
-    //   if (event.target.innerText === location.venue.name) { // Change location.venue.name to same information stored in marker (marker.title)
-
-
-        // TO DO: BOUNCE MARKER AND OPEN INFOWINDOW WITH THAT LOCATION INFORMATION
-        // Open infowindow in right spot and with right content if location.venue.name (in contentString) === event.target.innerText
-
-    //   }
-    // })
   }
 
   render() {
     const intro = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+    const { isLoading, error } = this.state;
+
+    if (error) {
+      return <p className="informingUser">{error.message}</p>
+    }
+
+    if (isLoading) {
+      return <p className="informingUser">Loading ...</p>;
+    }
 
     return (
       <main className="App">
@@ -159,7 +166,7 @@ class App extends Component {
         <div>
           <ul className="credits">
             <li><a href='https://www.freepik.com/free-vector/happy-people-with-ice-cream_2631347.htm'>Logo's designed by Freepik.</a></li>
-            <li><a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY.</a></li>
+            <li><a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC 3.0 BY.</a></li>
             <li><a href="https://foursquare.com/" title="Foursquare">Powered by Foursquare.</a></li>
           </ul>
         </div>
