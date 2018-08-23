@@ -29,8 +29,26 @@ class App extends Component {
       .then(response => {
         if (response.ok) {
           return response.json();
+        } if (response.status === 200) {
+          throw Error('Oh no! Something went wrong loading the required data from Foursquare. The error code is ' + response.status + '. Something about this request is using deprecated functionality, or the response format may be about to change.');
+        } if (response.status === 400) {
+          throw Error('Oh no! Something went wrong loading the required data from Foursquare. The error code is ' + response.status + '. Seems like you made a bad request. Please check your request query string and the request body.');
+        } if (response.status === 401) {
+          throw Error('Oh no! Something went wrong loading the required data from Foursquare. The error code is ' + response.status + '. This is an authorization issue: your OAuth token was invalid.');
+        } if (response.status === 403) {
+          throw Error('Oh no! Something went wrong loading the required data from Foursquare. The error code is ' + response.status + '. You are not allowed to access this page.');
+        } if (response.status === 404) {
+          throw Error('Oh no! Something went wrong loading the required data from Foursquare. The error code is ' + response.status + '. Seems like what you were looking for is not here.');
+        } if (response.status === 405) {
+          throw Error('Oh no! Something went wrong loading the required data from Foursquare. The error code is ' + response.status + '. You have attempted to use a POST with a GET-only endpoint, or vice-versa.');
+        } if (response.status === 409) {
+          throw Error('Oh no! Something went wrong loading the required data from Foursquare. The error code is ' + response.status + '. The request could not be completed as it is. Use the information included in the response to modify the request and retry.');
+        } if (response.status === 429) {
+          throw Error('Oh no! Something went wrong loading the required data from Foursquare. The error code is ' + response.status + '. You have made too many requests. You fanatic!');
+        } if (response.status === 500) {
+          throw Error('Oh no! Something went wrong loading the required data from Foursquare. The error code is ' + response.status + '. This points at an internal server error.');
         } else {
-          throw new Error('Oh no! Something went wrong. Please try again later.');
+          throw Error('Oh no! Something went wrong loading the required data from Foursquare. The error code is ' + response.status + '.')
         }
       })
       .then(response =>
@@ -43,7 +61,8 @@ class App extends Component {
       .catch(error =>
         this.setState({
           error, isLoading: false
-        }))
+        })
+      );
   }
 
   search = (query) => {
@@ -100,9 +119,13 @@ class App extends Component {
           setTimeout(function () {
             marker.setAnimation(null);
           }, 400)
+
+          window.location.assign('http://localhost:3000#map')
+
         }
 
         marker.addListener('click', myClickFunction)
+
 
       return myClickFunction
     })
@@ -130,11 +153,11 @@ class App extends Component {
     const { isLoading, error } = this.state;
 
     if (error) {
-      return <p className="informingUser">{error.message}</p>
+      return <p className="error">{error.message}</p>
     }
 
     if (isLoading) {
-      return <p className="informingUser">Loading ...</p>;
+      return <p id="loading">Loading ...</p>;
     }
 
     return (
@@ -153,7 +176,7 @@ class App extends Component {
             {this.state.filteredLocations.map((location, index) => (
               <li
                 key={location.venue.name}
-                className="listItem"
+                id="listItem"
                 onClick={() => this.showInfo(index)}>
                   {location.venue.name}
               </li>
@@ -164,10 +187,10 @@ class App extends Component {
           />
         </div>
         <div>
-          <ul className="credits">
-            <li><a href='https://www.freepik.com/free-vector/happy-people-with-ice-cream_2631347.htm'>Logo's designed by Freepik.</a></li>
-            <li><a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC 3.0 BY.</a></li>
-            <li><a href="https://foursquare.com/" title="Foursquare">Powered by Foursquare.</a></li>
+          <ul id="credits">
+            <li className="credit"><a href='https://www.freepik.com/free-vector/happy-people-with-ice-cream_2631347.htm'>Logo's designed by Freepik.</a></li>
+            <li className="credit"><a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC 3.0 BY.</a></li>
+            <li className="credit"><a href="https://foursquare.com/" title="Foursquare">Powered by Foursquare.</a></li>
           </ul>
         </div>
       </main>

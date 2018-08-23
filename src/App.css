@@ -2,10 +2,19 @@
   text-align: center;
 }
 
-.informingUser {
+#loading {
+  padding: 130px;
   text-align: center;
   font-family: 'Homemade Apple', cursive;
   font-size: 30px;
+}
+
+.error {
+  font-size: 30px;
+  color: #ccc;
+  padding: 200px;
+  text-align: center;
+  font-family: 'News Cycle', sans-serif;
 }
 
 .App-logo {
@@ -57,6 +66,23 @@ ul {
   box-shadow: 5px 5px 5px #ddd6d8;
 }
 
+#listItem {
+  line-height: 45px;
+
+  background-color: #ddd6d8;
+  padding: 10px;
+  box-shadow: inset 0 10px 40px 0 #b2b0b0;
+  border: 0.1px solid #b2b2b2;
+  color: #686868;
+  font-weight: bold;
+  height: 48px;
+}
+
+#listItem:hover {
+  background-color: #cecaca;
+  cursor: pointer;
+}
+
 li {
   font-family: 'News Cycle', sans-serif;
 }
@@ -67,9 +93,14 @@ li {
   width: 75%;
 }
 
-.listItem {
-  background-color: #ddd6d8;
-  padding: 10px;
+#credits {
+  margin: 0;
+  padding: 5px;
+  background-color: #7d7f74;
+}
+
+.credit {
+  font-size: 10px;
 }
 
 @keyframes bounce {
