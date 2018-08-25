@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types'
 import './App.css';
 
 class Search extends Component {
@@ -9,28 +10,39 @@ class Search extends Component {
 
 	handleSearch = (event) => {
 		const query = event.target.value;
-		this.props.search(event.target.value)
+		const { search } = this.props;
+
+		search(event.target.value)
 		this.setState({query})
 	}
 
 	render() {
+
+		const { query } = this.state;
+		const { handleSearch } = this;
+
 		return (
 			<div>
 				<form>
 	  				<label>
 	    				<input
+	    					role="search"
 	    					className="inputfield"
 		    				type="text"
 		    				name="filter"
 		    				placeholder="search venue"
-		    				value={this.state.query}
-		    				onChange={this.handleSearch}
+		    				value={query}
+		    				onChange={handleSearch}
 	    				/>
 	  				</label>
 				</form>
 			</div>
 		)
 	}
+}
+
+Search.propTypes = {
+	search: PropTypes.func.isRequired
 }
 
 export default Search;

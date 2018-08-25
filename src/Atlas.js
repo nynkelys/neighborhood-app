@@ -2,9 +2,13 @@ import React, { Component } from 'react';
 
 class Atlas extends Component {
 
-  render() {
+  render() { // Turn into stateless functional component if it remains stateless
+
     return (
-     	<div id="map">
+     	<div
+     		id="map"
+     		role="application"
+     	>
       	</div>
     )
   }

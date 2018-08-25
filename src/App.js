@@ -18,6 +18,7 @@ class App extends Component {
     allLocations: [],
     filteredLocations: [],
     markers: [],
+    houseMarker: {},
     map: {},
     locDetails: [],
     isLoading: false,
@@ -25,6 +26,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+
     this.setState({isLoading: true});
 
     fetch(API + DEFAULT_QUERY)
@@ -68,11 +70,16 @@ class App extends Component {
   }
 
   search = (query) => {
-    this.state.markers.map((marker) => { // TO DO: IMPROVE FILTER MARKERS (one step behind)
+
+    const { markers, allLocations, houseMarker } = this.state;
+
+    markers.map((marker) => { // TO DO: IMPROVE FILTER MARKERS (one step behind)
       marker.setMap(null); // Delete previous markers
     })
 
-    const locationsList = this.state.allLocations.filter((location) => { // Filter list
+    houseMarker.setMap(null);
+
+    const locationsList = allLocations.filter((location) => { // Filter list
         const lowercase = location.venue.name.toLowerCase()
         return lowercase.includes(query) || location.venue.name.includes(query)
     });
@@ -87,11 +94,11 @@ class App extends Component {
   }
 
   initMarkersAndInfowindow = () => {
+    const { map, filteredLocations } = this.state;
     const infowindow = new window.google.maps.InfoWindow(); // Create single infowindow
     const shownMarkers =[];
-    const map = this.state.map;
 
-    const myClickFunctionsArray = this.state.filteredLocations.map(location => { // Loop over venues inside state
+    const myClickFunctionsArray = filteredLocations.map(location => { // Loop over venues inside state
       const contentString =
         `<span class="restaurant-title">${location.venue.name}</span>
         <br>
@@ -103,13 +110,11 @@ class App extends Component {
 
       const marker = new window.google.maps.Marker({ // Create marker for every location in venues array in state
         position: {lat: location.venue.location.lat, lng: location.venue.location.lng}, // Where marker should appear
-        map: this.state.map, // The map it should appear on
+        map: map, // The map it should appear on
         title: location.venue.name, // Appears when hovering over (optional)
         animation: window.google.maps.Animation.DROP,
         icon: icon
       });
-
-
 
       shownMarkers.push(marker);
 
@@ -130,12 +135,13 @@ class App extends Component {
 
         marker.addListener('click', myClickFunction)
 
-      new window.google.maps.Marker({
+      const houseMarker = new window.google.maps.Marker({
         position: {lat: 52.515816, lng: 13.454293}, // Where marker should appear
-        map: this.state.map, // The map it should appear on
+        map: map, // The map it should appear on
         icon: house
       })
 
+      this.setState({houseMarker: houseMarker})
 
       return myClickFunction
     })
@@ -155,15 +161,19 @@ class App extends Component {
   }
 
   showInfo = (index) => {
-    this.state.myClickFunctionsArray[index]();
+    const { myClickFunctionsArray } = this.state;
+
+    myClickFunctionsArray[index]();
   }
 
   render() {
-    const intro = 'On this page, you will find the ten ice cream shops that are closest to be\'kech Anti Café, the café in which the scholarship graduation event will take place on the 8th of September. You can go through the list of shops and click on one of the items to receive more information about that specific venue. Alternatively, you can click on a lollipop on the map itself. Let me know if you want to get some ice cream with me after the event!'
-    const { isLoading, error } = this.state;
+
+    const intro = 'On this page, you will find the ten ice cream shops that are closest to my house in Friedrichshain, one of the (coolest) neighborhoods in Germany\'s capital Berlin. You can go through the list of shops and click on one of the items to receive more information about that specific venue. Alternatively, you can click on a lollipop on the map itself. Let me know if you want to have some ice cream with me if you are ever around!'
+    const { isLoading, error, filteredLocations } = this.state;
+    const { search, showInfo } = this;
 
     if (error) {
-      return <p className="error">{error.message}</p>
+      return <p className="error">{ error.message }</p>
     }
 
     if (isLoading) {
@@ -171,25 +181,36 @@ class App extends Component {
     }
 
     return (
-      <main className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+      <main
+        role="main"
+        className="App"
+      >
+        <header
+          role="banner"
+          className="App-header"
+        >
+          <img
+            src={ logo }
+            className="App-logo"
+            alt="logo"
+          />
           <h1 id="App-title">Time for ice cream</h1>
 
         </header>
         <div className="content">
-          <p className="intro">{intro}</p>
+          <p className="intro">{ intro }</p>
           <Search
-            search = {this.search}
+            search = { search }
           />
           <div id="locations">
           <ul id="ulList">
-            {this.state.filteredLocations.map((location, index) => (
+            {filteredLocations.map((location, index) => (
               <li
-                key={location.venue.name}
+                role="list"
+                key={ location.venue.name }
                 id="listItem"
-                onClick={() => this.showInfo(index)}>
-                  {location.venue.name}
+                onClick={() => showInfo(index)}>
+                  { location.venue.name }
               </li>
             ))}
           </ul>
@@ -199,10 +220,22 @@ class App extends Component {
           </div>
         </div>
         <div>
-          <ul id="credits">
-            <li className="credit"><a href='https://www.freepik.com/free-vector/happy-people-with-ice-cream_2631347.htm'>Logo's designed by Freepik.</a></li>
-            <li className="credit"><a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC 3.0 BY.</a></li>
-            <li className="credit"><a href="https://foursquare.com/" title="Foursquare">Powered by Foursquare.</a></li>
+          <ul
+            role="list"
+            id="credits"
+          >
+            <li
+              className="credit"
+              role="contentinfo"
+            ><a href='https://www.freepik.com/free-vector/happy-people-with-ice-cream_2631347.htm'>Logo's designed by Freepik.</a></li>
+            <li
+              className="credit"
+              role="contentinfo"
+            ><a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC 3.0 BY.</a></li>
+            <li
+              className="credit"
+              role="contentinfo"
+            ><a href="https://foursquare.com/" title="Foursquare">Powered by Foursquare.</a></li>
           </ul>
         </div>
       </main>
