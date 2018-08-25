@@ -1,9 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Atlas extends Component {
-
-  render() { // Turn into stateless functional component if it remains stateless
-
+function Atlas() {
     return (
      	<div
      		tabIndex="-1"
@@ -13,7 +10,6 @@ class Atlas extends Component {
      	>
       	</div>
     )
-  }
 }
 
 export default Atlas;
