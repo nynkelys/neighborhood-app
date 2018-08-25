@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './icon.jpg';
 import icon from './icon.svg';
+import house from './house.png'
 import './App.css';
 import Search from './Search';
 import Atlas from './Atlas';
@@ -9,7 +10,7 @@ import Atlas from './Atlas';
 // functionName = () => { ... }
 
 const API = 'https://api.foursquare.com/v2/venues/explore?'
-const DEFAULT_QUERY = 'client_id=ORY3CXCT1M3CBRNVOZDJMAN250AMDHL5H24RWLMO4NYQOYVL&client_secret=WU5OUOY1WL2O4JFDWKHSKDPF3OC2VXCQTLBEPNEN511AFPWD&v=20180323&limit=10&ll=52.55413,13.37466&query=ice+cream+shop'
+const DEFAULT_QUERY = 'client_id=ORY3CXCT1M3CBRNVOZDJMAN250AMDHL5H24RWLMO4NYQOYVL&client_secret=WU5OUOY1WL2O4JFDWKHSKDPF3OC2VXCQTLBEPNEN511AFPWD&v=20180323&limit=10&ll=52.5058773,13.4674052&query=ice+cream+shop'
 
 class App extends Component {
 
@@ -57,30 +58,13 @@ class App extends Component {
           allLocations: response.response.groups[0].items, // Array of objects with venue data
           filteredLocations: response.response.groups[0].items,
           isLoading: false
-        }, this.getDetails)
+        }, this.renderMap)
       )
       .catch(error =>
         this.setState({
           error, isLoading: false
         })
       );
-  }
-
-  getDetails = () => { // TO DO: EXPLAIN WHAT PLAN WAS HERE
-    // const locationIds = [];
-    // this.state.filteredLocations.map((location) => {
-    //   const id = location.venue.id
-    //   const URL_details = 'https://api.foursquare.com/v2/venues/'
-
-
-    // fetch(URL_details + id)
-    //   .then(response => {
-    //     if (response.ok) {
-    //       console.log(response)
-    //     }
-    //   })
-    // })
-    this.renderMap();
   }
 
   search = (query) => {
@@ -125,6 +109,8 @@ class App extends Component {
         icon: icon
       });
 
+
+
       shownMarkers.push(marker);
 
       this.setState({markers: shownMarkers})
@@ -144,6 +130,12 @@ class App extends Component {
 
         marker.addListener('click', myClickFunction)
 
+      new window.google.maps.Marker({
+        position: {lat: 52.515816, lng: 13.454293}, // Where marker should appear
+        map: this.state.map, // The map it should appear on
+        icon: house
+      })
+
 
       return myClickFunction
     })
@@ -154,8 +146,8 @@ class App extends Component {
   initMap = () => { // Add function to load map after page loads/before user interacts with map
     const styles = [];
     const map = new window.google.maps.Map(document.getElementById('map'), { // Initialize
-      center: {lat: 52.55413, lng: 13.37466}, // What location to center
-      zoom: 12,
+      center: {lat: 52.515816, lng: 13.454293}, // What location to center
+      zoom: 14,
       styles: styles
     });
     this.setState({map: map})
@@ -167,7 +159,7 @@ class App extends Component {
   }
 
   render() {
-    const intro = 'On this page, you will find the ten ice cream shops that are closest to be\'kech Anti Café, the café in which the scholarship graduation event will take place on the 7th of September. You can go through the list of shops and click on one of the items to receive more information about that specific venue. Alternatively, you can click on a lollipop on the map itself. Let me know if you want to get some ice cream with me after the event!'
+    const intro = 'On this page, you will find the ten ice cream shops that are closest to be\'kech Anti Café, the café in which the scholarship graduation event will take place on the 8th of September. You can go through the list of shops and click on one of the items to receive more information about that specific venue. Alternatively, you can click on a lollipop on the map itself. Let me know if you want to get some ice cream with me after the event!'
     const { isLoading, error } = this.state;
 
     if (error) {
