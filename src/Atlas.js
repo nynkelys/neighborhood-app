@@ -6,8 +6,10 @@ class Atlas extends Component {
 
     return (
      	<div
+     		tabIndex="-1"
      		id="map"
      		role="application"
+     		aria-label="Google Maps window"
      	>
       	</div>
     )

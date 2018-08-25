@@ -18,6 +18,11 @@
   font-family: 'News Cycle', sans-serif;
 }
 
+.screenreader {
+  position: absolute;
+  left: -10000px;
+}
+
 .App-logo {
   transition: all 500ms ease;
   height: 150px;
@@ -79,7 +84,7 @@ ul {
   box-shadow: 5px 5px 5px #ddd6d8;
 }
 
-#listItem {
+.listItem {
   line-height: 45px;
   background-color: #ddd6d8;
   padding: 10px;
@@ -90,7 +95,7 @@ ul {
   height: 48px;
 }
 
-#listItem:hover {
+.listItem:hover {
   background-color: #cecaca;
   cursor: pointer;
 }

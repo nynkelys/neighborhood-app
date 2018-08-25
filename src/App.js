@@ -5,6 +5,7 @@ import house from './house.png'
 import './App.css';
 import Search from './Search';
 import Atlas from './Atlas';
+import DocumentTitle from 'react-document-title';
 
 // INSIDE COMPONENT, you can't say 'function functionName() { ... }', instead write like this:
 // functionName = () => { ... }
@@ -100,7 +101,7 @@ class App extends Component {
 
     const myClickFunctionsArray = filteredLocations.map(location => { // Loop over venues inside state
       const contentString =
-        `<span class="restaurant-title">${location.venue.name}</span>
+        `<em class="restaurant-title">${location.venue.name}</em>
         <br>
         <br>
         ${location.venue.location.formattedAddress[0]},
@@ -150,7 +151,132 @@ class App extends Component {
   }
 
   initMap = () => { // Add function to load map after page loads/before user interacts with map
-    const styles = [];
+    const styles =
+      [
+    {
+        "featureType": "landscape.man_made",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#e9e9e9"
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "all",
+        "stylers": [
+            {
+                "saturation": -100
+            },
+            {
+                "lightness": 45
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#7b7b7b"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "labels.text.stroke",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            }
+        ]
+    },
+    {
+        "featureType": "road.highway",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "simplified"
+            }
+        ]
+    },
+    {
+        "featureType": "road.arterial",
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "elementType": "all",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "all",
+        "stylers": [
+            {
+                "color": "#46bcec"
+            },
+            {
+                "visibility": "on"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "geometry.fill",
+        "stylers": [
+            {
+                "color": "#8fd4d4"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#070707"
+            }
+        ]
+    },
+    {
+        "featureType": "water",
+        "elementType": "labels.text.stroke",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            }
+        ]
+    }
+];
     const map = new window.google.maps.Map(document.getElementById('map'), { // Initialize
       center: {lat: 52.515816, lng: 13.454293}, // What location to center
       zoom: 14,
@@ -169,6 +295,7 @@ class App extends Component {
   render() {
 
     const intro = 'On this page, you will find the ten ice cream shops that are closest to my house in Friedrichshain, one of the (coolest) neighborhoods in Germany\'s capital Berlin. You can go through the list of shops and click on one of the items to receive more information about that specific venue. Alternatively, you can click on a lollipop on the map itself. Let me know if you want to have some ice cream with me if you are ever around!'
+    const introScreenreader = 'On this page, you will find the ten ice cream shops that are closest to my house in Friedrichshain, one of the (coolest) neighborhoods in Germany\'s capital Berlin. Go through the list of shops and select one of the items to receive more information about that specific venue. Let me know if you want to have some ice cream with me if you are ever around!'
     const { isLoading, error, filteredLocations } = this.state;
     const { search, showInfo } = this;
 
@@ -181,64 +308,69 @@ class App extends Component {
     }
 
     return (
-      <main
-        role="main"
-        className="App"
-      >
-        <header
-          role="banner"
-          className="App-header"
+      <DocumentTitle title="Ice cream: Friedrichshain">
+        <main
+          role="main"
+          className="App"
         >
-          <img
-            src={ logo }
-            className="App-logo"
-            alt="logo"
-          />
-          <h1 id="App-title">Time for ice cream</h1>
-
-        </header>
-        <div className="content">
-          <p className="intro">{ intro }</p>
-          <Search
-            search = { search }
-          />
-          <div id="locations">
-          <ul id="ulList">
-            {filteredLocations.map((location, index) => (
-              <li
-                role="list"
-                key={ location.venue.name }
-                id="listItem"
-                onClick={() => showInfo(index)}>
-                  { location.venue.name }
-              </li>
-            ))}
-          </ul>
-          <Atlas
-            // Props
-          />
-          </div>
-        </div>
-        <div>
-          <ul
-            role="list"
-            id="credits"
+          <header
+            role="banner"
+            className="App-header"
           >
-            <li
-              className="credit"
-              role="contentinfo"
-            ><a href='https://www.freepik.com/free-vector/happy-people-with-ice-cream_2631347.htm'>Logo's designed by Freepik.</a></li>
-            <li
-              className="credit"
-              role="contentinfo"
-            ><a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC 3.0 BY.</a></li>
-            <li
-              className="credit"
-              role="contentinfo"
-            ><a href="https://foursquare.com/" title="Foursquare">Powered by Foursquare.</a></li>
-          </ul>
-        </div>
-      </main>
+            <img
+              src={ logo }
+              className="App-logo"
+              alt="logo"
+            />
+            <h1 id="App-title">Time for ice cream</h1>
+
+          </header>
+          <section className="content">
+            <p
+              className="screenreader"
+              tabIndex="0"
+            >{ introScreenreader }</p>
+            <p className="intro">{ intro }</p>
+            <Search
+              search = { search }
+            />
+            <section id="locations">
+              <ul id="ulList">
+                {filteredLocations.map((location, index) => (
+                  <li
+                    role="button"
+                    tabIndex="0"
+                    key={ location.venue.name }
+                    className="listItem"
+                    onClick={() => showInfo(index)}>
+                      { location.venue.name }
+                  </li>
+                ))}
+              </ul>
+              <Atlas/>
+            </section>
+          </section>
+          <footer>
+            <ul
+              role="list"
+              id="credits"
+            >
+              <li
+                className="credit"
+                role="contentinfo"
+              ><a href='https://www.freepik.com/free-vector/happy-people-with-ice-cream_2631347.htm'>Logo's designed by Freepik.</a></li>
+              <li
+                className="credit"
+                role="contentinfo"
+              ><a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC 3.0 BY.</a></li>
+              <li
+                className="credit"
+                role="contentinfo"
+              ><a href="https://foursquare.com/" title="Foursquare">Powered by Foursquare.</a></li>
+            </ul>
+          </footer>
+        </main>
+      </DocumentTitle>
     );
   }
 }

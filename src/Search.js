@@ -27,6 +27,7 @@ class Search extends Component {
 	  				<label>
 	    				<input
 	    					role="search"
+	    					aria-label="Search for a location"
 	    					className="inputfield"
 		    				type="text"
 		    				name="filter"
