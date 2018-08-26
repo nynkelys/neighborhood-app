@@ -30,4 +30,15 @@ The service worker will use a [cache-first strategy](https://developers.google.c
 
 ## Third party APIs
 
-The [Google Maps API](https://cloud.google.com/maps-platform/) was used to create the map and the [Foursquare API](https://foursquar
+The [Google Maps API](https://cloud.google.com/maps-platform/) was used to create the map and the [Foursquare API](https://foursquare.com/developers/apps) was used to fetch location data. 
+
+Additionally, images were downloaded from [Freepik](https://freepik.com/).
+
+## Bugs
+
+No known bugs.
+
+## Contributing
+
+I most likely will not accept pull requests.
+
