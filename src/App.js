@@ -292,12 +292,23 @@ class App extends Component {
     myClickFunctionsArray[index]();
   }
 
+  showInfoOnKey = (event, index) => {
+    const { myClickFunctionsArray } = this.state;
+    const listItems = document.getElementsByClassName("listItem");
+
+    if (event.keyCode === 13) {
+      myClickFunctionsArray[index]();
+      listItems[index].focus()
+    }
+
+  }
+
   render() {
 
     const intro = 'On this page, you will find the ten ice cream shops that are closest to my house in Friedrichshain, one of the (coolest) neighborhoods in Germany\'s capital Berlin. You can go through the list of shops and click on one of the items to receive more information about that specific venue. Alternatively, you can click on a lollipop on the map itself. Let me know if you want to have some ice cream with me if you are ever around!'
     const introScreenreader = 'On this page, you will find the ten ice cream shops that are closest to my house in Friedrichshain, one of the (coolest) neighborhoods in Germany\'s capital Berlin. Go through the list of shops and select one of the items to receive more information about that specific venue. Let me know if you want to have some ice cream with me if you are ever around!'
     const { isLoading, error, filteredLocations } = this.state;
-    const { search, showInfo } = this;
+    const { search, showInfo, showInfoOnKey } = this;
 
     if (error) {
       return <p className="error">{ error.message }</p>
@@ -342,7 +353,8 @@ class App extends Component {
                     tabIndex="0"
                     key={ location.venue.name }
                     className="listItem"
-                    onClick={() => showInfo(index)}>
+                    onClick={() => showInfo(index)}
+                    onKeyDown={(event) => showInfoOnKey(event, index)}>
                       { location.venue.name }
                   </li>
                 ))}
@@ -351,10 +363,7 @@ class App extends Component {
             </section>
           </section>
           <footer>
-            <ul
-              role="list"
-              id="credits"
-            >
+            <ul id="credits">
               <li
                 className="credit"
                 role="contentinfo"
