@@ -6,7 +6,6 @@ import './App.css';
 import Search from './Search';
 import Atlas from './Atlas';
 import DocumentTitle from 'react-document-title';
-import scriptLoader from 'react-async-script-loader';
 
 // INSIDE COMPONENT, you can't say 'function functionName() { ... }', instead write like this:
 // functionName = () => { ... }
@@ -91,10 +90,22 @@ class App extends Component {
   }
 
   renderMap = () => { // Function will only be invoked when we have venues
-    const my_script = loadScript("https://maps.gogleapis.com/maps/api/js?key=AIzaSyAPWE9q9dv42yCFbSvSJBK8x8wgjrwAMrA&v=3&callback=initMap")
+    loadscript("https://maps.googleapisWILLNOTWORK.com/maps/api/js?key=AIzaSyAPWE9q9dv42yCFbSvSJBK8x8wgjrwAMrA&v=3&callback=initMap")
+      .then(() =>
+        {console.log('loaded');
+        return true;})
+      .catch(err => {this.googleError();})
     window.initMap = this.initMap // Respectively refers to initMap function below and to initMap function in callback of script URL
   }
 
+
+  googleError = () => {
+    const loadingMsg = window.document.getElementById("maploader")
+    const spinner = window.document.getElementById("loader")
+
+    loadingMsg.innerHTML = loadingMsg.innerHTML.replace("Loading Google Maps ... This might take a while! Please be patient.", "There was an error loading Google Maps. Please try again later.")
+    spinner.parentNode.removeChild(spinner)
+  }
 
   initMarkersAndInfowindow = () => {
     const { map, filteredLocations } = this.state;
@@ -303,23 +314,12 @@ class App extends Component {
     }
   }
 
-  googleError = () => {
-    console.log("Hello")
-  }
-
   render() {
 
     const intro = 'On this page, you will find the ten ice cream shops that are closest to my house in Friedrichshain, one of the (coolest) neighborhoods in Germany\'s capital Berlin. You can go through the list of shops and click on one of the items to receive more information about that specific venue. Alternatively, you can click on a lollipop on the map itself. Let me know if you want to have some ice cream with me if you are ever around!'
     const introScreenreader = 'On this page, you will find the ten ice cream shops that are closest to my house in Friedrichshain, one of the (coolest) neighborhoods in Germany\'s capital Berlin. Go through the list of shops and select one of the items to receive more information about that specific venue. Let me know if you want to have some ice cream with me if you are ever around!'
     const { isLoading, error, filteredLocations } = this.state;
     const { search, showInfo, showInfoOnKey } = this;
-
-    if (this.state.status === 'start') {
-      this.state.status === 'loading'
-      setTimeout(function() {
-        this.do_load()
-      }, 0);
-    }
 
     if (error) {
       return <p className="error">{ error.message }</p>
@@ -396,15 +396,21 @@ class App extends Component {
 }
 
 // Outside of our component we define a function that creates the required Google Maps script tag manually:
-function loadScript(url) {
-    const index = window.document.getElementsByTagName("script")[0] // First script tag
+var loadscript = function(url) {
+  return new Promise((onSuccess, onError) => {
     const script = window.document.createElement("script")
-
     script.src = url
     script.async = true
-    script.defer = true
+    script.onload = () => {
+      onSuccess();
+    };
+    script.onerror = () => {
+      onError();
+    };
 
+    const index = window.document.getElementsByTagName("script")[0] // First script tag
     index.parentNode.insertBefore(script, index) // newNode, referenceNode
+  })
 }
 
 export default App;
