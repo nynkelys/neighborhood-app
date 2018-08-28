@@ -91,9 +91,10 @@ class App extends Component {
   }
 
   renderMap = () => { // Function will only be invoked when we have venues
-    loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyAPWE9q9dv42yCFbSvSJBK8x8wgjrwAMrA&v=3&callback=initMap")
+    const my_script = loadScript("https://maps.gogleapis.com/maps/api/js?key=AIzaSyAPWE9q9dv42yCFbSvSJBK8x8wgjrwAMrA&v=3&callback=initMap")
     window.initMap = this.initMap // Respectively refers to initMap function below and to initMap function in callback of script URL
   }
+
 
   initMarkersAndInfowindow = () => {
     const { map, filteredLocations } = this.state;
@@ -313,6 +314,13 @@ class App extends Component {
     const { isLoading, error, filteredLocations } = this.state;
     const { search, showInfo, showInfoOnKey } = this;
 
+    if (this.state.status === 'start') {
+      this.state.status === 'loading'
+      setTimeout(function() {
+        this.do_load()
+      }, 0);
+    }
+
     if (error) {
       return <p className="error">{ error.message }</p>
     }
@@ -389,18 +397,14 @@ class App extends Component {
 
 // Outside of our component we define a function that creates the required Google Maps script tag manually:
 function loadScript(url) {
-  const index = window.document.getElementsByTagName("script")[0] // First script tag
-  const script = window.document.createElement("script")
-  const loadingMsg = window.document.getElementById("maploader")
-  const spinner = window.document.getElementById("loader")
-  script.src = url
-  script.async = true
-  script.defer = true
-  script.onerror = function() { // This function runs when an error is detected (can take 20 seconds)
-    loadingMsg.innerHTML = loadingMsg.innerHTML.replace("Loading Google Maps ... This might take a while! Please be patient.", "There was an error loading Google Maps. Please try again later.")
-    spinner.parentNode.removeChild(spinner)
-  }
-  index.parentNode.insertBefore(script, index) // newNode, referenceNode
+    const index = window.document.getElementsByTagName("script")[0] // First script tag
+    const script = window.document.createElement("script")
+
+    script.src = url
+    script.async = true
+    script.defer = true
+
+    index.parentNode.insertBefore(script, index) // newNode, referenceNode
 }
 
 export default App;

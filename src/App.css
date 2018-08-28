@@ -20,6 +20,16 @@
   font-size: 30px;
 }
 
+#maperror {
+  padding-top: 130px;
+  padding-right: 130px;
+  padding-left: 130px;
+  text-align: center;
+  font-family: 'News Cycle', sans-serif;
+  color: #ccc;
+  font-size: 30px;
+}
+
 #loader {
   margin-top: 75px;
   display: inline-block;
