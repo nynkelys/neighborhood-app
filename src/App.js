@@ -6,6 +6,7 @@ import './App.css';
 import Search from './Search';
 import Atlas from './Atlas';
 import DocumentTitle from 'react-document-title';
+import scriptLoader from 'react-async-script-loader';
 
 // INSIDE COMPONENT, you can't say 'function functionName() { ... }', instead write like this:
 // functionName = () => { ... }
@@ -301,6 +302,10 @@ class App extends Component {
     }
   }
 
+  googleError = () => {
+    console.log("Hello")
+  }
+
   render() {
 
     const intro = 'On this page, you will find the ten ice cream shops that are closest to my house in Friedrichshain, one of the (coolest) neighborhoods in Germany\'s capital Berlin. You can go through the list of shops and click on one of the items to receive more information about that specific venue. Alternatively, you can click on a lollipop on the map itself. Let me know if you want to have some ice cream with me if you are ever around!'
@@ -357,7 +362,7 @@ class App extends Component {
                   </li>
                 ))}
               </ul>
-              <Atlas/>
+                <Atlas/>
             </section>
           </section>
           <footer>
@@ -384,13 +389,16 @@ class App extends Component {
 
 // Outside of our component we define a function that creates the required Google Maps script tag manually:
 function loadScript(url) {
-  var index = window.document.getElementsByTagName("script")[0] // First script tag
-  var script = window.document.createElement("script")
+  const index = window.document.getElementsByTagName("script")[0] // First script tag
+  const script = window.document.createElement("script")
+  const loadingMsg = window.document.getElementById("maploader")
+  const spinner = window.document.getElementById("loader")
   script.src = url
   script.async = true
   script.defer = true
-  script.onerror = function(error) {
-    alert("Oh no! An error occurred while loading the map through the Google Maps API.");
+  script.onerror = function() { // This function runs when an error is detected (can take 20 seconds)
+    loadingMsg.innerHTML = loadingMsg.innerHTML.replace("Loading Google Maps ... This might take a while! Please be patient.", "There was an error loading Google Maps. Please try again later.")
+    spinner.parentNode.removeChild(spinner)
   }
   index.parentNode.insertBefore(script, index) // newNode, referenceNode
 }

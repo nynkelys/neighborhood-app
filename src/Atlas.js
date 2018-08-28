@@ -1,5 +1,4 @@
 import React from 'react';
-import loading from './loading.svg';
 
 function Atlas() {
     return (
@@ -9,7 +8,9 @@ function Atlas() {
      		role="application"
      		aria-label="Google Maps window"
      	>
-     		<div id="loader">
+     		<div>
+	     		<div id="maploader">Loading Google Maps ... This might take a while! Please be patient.</div>
+	            <div id="loader"></div>
             </div>
       	</div>
     )

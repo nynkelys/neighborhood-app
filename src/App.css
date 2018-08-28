@@ -10,6 +10,16 @@
   font-size: 30px;
 }
 
+#maploader {
+  padding-top: 130px;
+  padding-right: 130px;
+  padding-left: 130px;
+  text-align: center;
+  font-family: 'News Cycle', sans-serif;
+  color: #ccc;
+  font-size: 30px;
+}
+
 #loader {
   margin-top: 75px;
   display: inline-block;
@@ -132,6 +142,11 @@ li {
   font-size: 10px;
 }
 
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}
+
 @keyframes bounce {
   0%, 20%, 60%, 100% {
     -webkit-transform: translateY(0);
@@ -147,11 +162,6 @@ li {
     -webkit-transform: translateY(-10px);
     transform: translateY(-10px);
   }
-}
-
-@keyframes spin {
-    from {transform:rotate(0deg);}
-    to {transform:rotate(360deg);}
 }
 
 @media screen and (min-width: 400px) {
