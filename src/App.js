@@ -90,7 +90,7 @@ class App extends Component {
   }
 
   renderMap = () => { // Function will only be invoked when we have venues
-    loadscript("https://maps.googleapisWILLNOTWORK.com/maps/api/js?key=AIzaSyAPWE9q9dv42yCFbSvSJBK8x8wgjrwAMrA&v=3&callback=initMap")
+    loadscript("https://maps.googleapis.com/maps/api/js?key=AIzaSyAPWE9q9dv42yCFbSvSJBK8x8wgjrwAMrA&v=3&callback=initMap")
       .then(() =>
         {console.log('loaded');
         return true;})
