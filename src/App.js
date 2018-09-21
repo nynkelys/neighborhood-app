@@ -6,6 +6,7 @@ import './App.css';
 import Search from './Search';
 import Atlas from './Atlas';
 import DocumentTitle from 'react-document-title';
+import styler from './styles.json';
 
 // INSIDE COMPONENT, you can't say 'function functionName() { ... }', instead write like this:
 // functionName = () => { ... }
@@ -98,7 +99,6 @@ class App extends Component {
     window.initMap = this.initMap // Respectively refers to initMap function below and to initMap function in callback of script URL
   }
 
-
   googleError = () => {
     const loadingMsg = window.document.getElementById("maploader")
     const spinner = window.document.getElementById("loader")
@@ -164,131 +164,7 @@ class App extends Component {
   }
 
   initMap = () => { // Add function to load map after page loads/before user interacts with map
-    const styles = [
-      {
-          "featureType": "landscape.man_made",
-          "elementType": "geometry.fill",
-          "stylers": [
-              {
-                  "color": "#e9e9e9"
-              }
-          ]
-      },
-      {
-          "featureType": "poi",
-          "elementType": "all",
-          "stylers": [
-              {
-                  "visibility": "off"
-              }
-          ]
-      },
-      {
-          "featureType": "road",
-          "elementType": "all",
-          "stylers": [
-              {
-                  "saturation": -100
-              },
-              {
-                  "lightness": 45
-              }
-          ]
-      },
-      {
-          "featureType": "road",
-          "elementType": "geometry.fill",
-          "stylers": [
-              {
-                  "color": "#ffffff"
-              }
-          ]
-      },
-      {
-          "featureType": "road",
-          "elementType": "labels.text.fill",
-          "stylers": [
-              {
-                  "color": "#7b7b7b"
-              }
-          ]
-      },
-      {
-          "featureType": "road",
-          "elementType": "labels.text.stroke",
-          "stylers": [
-              {
-                  "color": "#ffffff"
-              }
-          ]
-      },
-      {
-          "featureType": "road.highway",
-          "elementType": "all",
-          "stylers": [
-              {
-                  "visibility": "simplified"
-              }
-          ]
-      },
-      {
-          "featureType": "road.arterial",
-          "elementType": "labels.icon",
-          "stylers": [
-              {
-                  "visibility": "off"
-              }
-          ]
-      },
-      {
-          "featureType": "transit",
-          "elementType": "all",
-          "stylers": [
-              {
-                  "visibility": "off"
-              }
-          ]
-      },
-      {
-          "featureType": "water",
-          "elementType": "all",
-          "stylers": [
-              {
-                  "color": "#46bcec"
-              },
-              {
-                  "visibility": "on"
-              }
-          ]
-      },
-      {
-          "featureType": "water",
-          "elementType": "geometry.fill",
-          "stylers": [
-              {
-                  "color": "#8fd4d4"
-              }
-          ]
-      },
-      {
-          "featureType": "water",
-          "elementType": "labels.text.fill",
-          "stylers": [
-              {
-                  "color": "#070707"
-              }
-          ]
-      },
-      {
-          "featureType": "water",
-          "elementType": "labels.text.stroke",
-          "stylers": [
-              {
-                  "color": "#ffffff"
-              }
-          ]
-      }
-    ];
+    const styles = styler;
     const map = new window.google.maps.Map(document.getElementById('map'), { // Initialize
       center: {lat: 52.515816, lng: 13.454293}, // What location to center
       zoom: 14,

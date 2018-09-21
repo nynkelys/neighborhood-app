@@ -1,4 +1,4 @@
-  const styles = [
+[
         {
             "featureType": "landscape.man_made",
             "elementType": "geometry.fill",
@@ -123,4 +123,3 @@
             ]
         }
       ]
-module.exports = {dat: styles}
